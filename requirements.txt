@@ -1,5 +1,5 @@
 Flask==2.1.1
 paddlepaddle==2.6.2
 paddleocr==2.6.1
-PyMuPDF==1.18.0
+PyMuPDF
 twisted==22.1.0
