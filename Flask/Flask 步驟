@@ -1,0 +1,4 @@
+安裝 pip install Flask
+新增app.py
+新增index.html (注意放的位子)
+啟動 python app.py
