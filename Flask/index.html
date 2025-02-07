@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多檔案上傳與檔名修改</title>
+    <style>
+        /* 添加一些底部間距 */
+        #bottomSection {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h1>上傳多張圖片進行識別與檔名修改</h1>
+    <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="files" accept="image/*" multiple required>
+        <button type="submit">上傳圖片</button>
+    </form>
+
+    <h2>已上傳的檔案：</h2>
+    <ul id="uploadedFiles">
+        <!-- 已上傳的檔案將列出於此 -->
+    </ul>
+
+    <div id="result"></div>
+
+    <!-- 這裡是新加的區域，移動「一次下載全部檔案」的按鈕 -->
+    <div id="bottomSection">
+        <button id="downloadAllBtn">一次下載全部檔案</button>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').onsubmit = async function (event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<h3>上傳結果：</h3>';
+            result.forEach(fileInfo => {
+                const message = fileInfo.new_name ? 
+                    `原檔案: ${fileInfo.original_name} ➡ 新檔案: ${fileInfo.new_name}` :
+                    `原檔案: ${fileInfo.original_name} ➡ 處理失敗 (${fileInfo.message})`;
+                const p = document.createElement('p');
+                p.textContent = message;
+                resultDiv.appendChild(p);
+
+                // 如果有新檔名，顯示下載按鈕
+                if (fileInfo.new_name) {
+                    const downloadButton = document.createElement('button');
+                    downloadButton.textContent = '下載修改後的圖片';
+                    downloadButton.onclick = function() {
+                        const downloadUrl = `/download/${fileInfo.new_name}`;
+                        const a = document.createElement('a');
+                        a.href = downloadUrl;
+                        a.download = fileInfo.new_name;
+                        a.click();
+                    };
+                    resultDiv.appendChild(downloadButton);
+                }
+            });
+        };
+
+        // 一次下載全部檔案按鈕
+        document.getElementById('downloadAllBtn').onclick = function () {
+            window.location.href = '/download_all';
+        };
+    </script>
+</body>
+</html>
