@@ -1,10 +1,5 @@
 Flask==2.1.1
-paddlepaddle==2.6.1
+paddlepaddle==2.6.2  # 這是當前較穩定的版本，請根據實際情況選擇
 paddleocr==2.6.1
+PyMuPDF==1.18.19  # 如果這版本衝突，您可以嘗試降級或更新
 twisted==22.1.0
-pip>=21.3.1
-setuptools>=59.5.0
-wheel>=0.36.2
-PyMuPDF==1.19.0
-
-
